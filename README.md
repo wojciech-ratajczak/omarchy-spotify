@@ -22,6 +22,14 @@ If that player has a title or artist, the bar shows:
 
 Ads are detected from a track id that contains `:ad:` and shown as `Advertisement` instead of the ad metadata.
 
+Long names are cut to 50 characters at the last whole word, ending with `…`, so they don't run into the rest of the bar. The tooltip still shows the full text. To change the limit, set `maxLength` on the widget's entry in `~/.config/omarchy/shell.json` (`0` shows everything):
+
+```json
+{ "id": "io.github.swadowmaster.spotify", "maxLength": 40 }
+```
+
+The bar picks up the change on save.
+
 If Spotify is closed, or open but with no track, the widget sets its width to zero and disappears. It comes back by itself when playback starts. Nothing is written to disk and no extra process is spawned.
 
 Controls (only while a track is visible):
@@ -31,7 +39,7 @@ Controls (only while a track is visible):
 | Left click | Play / pause |
 | Scroll up or middle click | Previous track |
 | Scroll down or right click | Next track |
-| Hover | Playing/paused plus the same title |
+| Hover | Playing/paused plus the full title |
 
 ## Install
 

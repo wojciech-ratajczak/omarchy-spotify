@@ -30,11 +30,17 @@ BarWidget {
       return artist + " - " + title
     return title || artist
   }
+  // Longest text the bar shows, in characters ("maxLength" in shell.json).
+  // 0 shows everything; the tooltip always has the full text.
+  readonly property int maxLength: {
+    const value = settings ? settings.maxLength : undefined
+    return typeof value === "number" && value >= 0 ? Math.floor(value) : 50
+  }
   readonly property string label: {
     if (!hasTrack)
       return ""
     const icon = playing ? "" : ""
-    return icon + " " + displayText + "  "
+    return icon + " " + shorten(displayText, maxLength) + "  "
   }
 
   visible: hasTrack
@@ -45,6 +51,18 @@ BarWidget {
   function close() {}
   function toggle() {}
   function closeForPopoutSwitch() {}
+
+  // Cut at the last whole word that fits and end with "…".
+  function shorten(text, limit) {
+    const chars = Array.from(text)
+    if (limit <= 0 || chars.length <= limit)
+      return text
+    let head = chars.slice(0, limit - 1).join("")
+    const space = head.lastIndexOf(" ")
+    if (space > head.length / 2)
+      head = head.slice(0, space)
+    return head.replace(/[\s,.:;\-–—]+$/, "") + "…"
+  }
 
   function looksLikeSpotify(p) {
     if (!p)
